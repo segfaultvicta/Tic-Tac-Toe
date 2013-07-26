@@ -17,18 +17,20 @@ class Board:
             self.marks = initial_state
         print self.marks
 
-    #Returns a string of the current board in a printable format.
-    def print_format(self):
+    # Returns a string of the current board in a printable format.
+    # If showPositions is true, it'll print out the number of each position,
+    # rather than the mark at each position.
+    def print_format(self, showPositions=False):
         string =  "-|---|---|---|-\n | " 
-        string += self.translate(0) + " | " + self.translate(1) + " | " + self.translate(2) + " |\n"
+        string += self.translate(0, showPositions) + " | " + self.translate(1, showPositions) + " | " + self.translate(2, showPositions) + " |\n"
         string += "-|---|---|---|-\n | "
-        string += self.translate(3) + " | " + self.translate(4) + " | " + self.translate(5) + " |\n"
+        string += self.translate(3, showPositions) + " | " + self.translate(4, showPositions) + " | " + self.translate(5, showPositions) + " |\n"
         string += "-|---|---|---|-\n | "
-        string += self.translate(6) + " | " + self.translate(7) + " | " + self.translate(8) + " |\n"
+        string += self.translate(6, showPositions) + " | " + self.translate(7, showPositions) + " | " + self.translate(8, showPositions) + " |\n"
         string += "-|---|---|---|-\n"
         return string
 
-    def translate(self,position):
+    def translate(self,position, showPositions=False):
         # Positions are defined as follows:
         # -|---|---|---|-
         #  | 0 | 1 | 2 |
@@ -39,6 +41,9 @@ class Board:
         # -|---|---|---|-
         # translate() will, given a board position, return a character representing that position's
         # status in a manner fit for human consumption.
+        # If showPositions is true, will return the current position rather than the mark at that position.
+        if showPositions:
+            return str(position)
         if self.marks[position] == 1:
             return " "
         elif self.marks[position] == 2:

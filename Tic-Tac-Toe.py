@@ -1,4 +1,4 @@
-import Board
+from Board import Board
 
 print "Is it can be tic-tac-toe tiem nao plz?"
 
@@ -16,5 +16,17 @@ while 1:
     else:
         print "Sorry, I didn't understand that input."
 
+game = Board()
 
+#while we still want to play again...
+while 1:
+    #while the game hasn't yet been won...
+    turn = 1
+    while 1:
+        
+        print "Turn " + str(turn) + ":"
+        print game.print_format()
+        
+
+    
 
