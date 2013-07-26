@@ -8,12 +8,12 @@ class Board:
     # This facilitates determining the state of any given row, column, 
     # or diagonal.
     def  __init__(self, initial_state=None):
-        print "init board"
+        #print "init board"
         if initial_state is None:
-            print "initial state none, making blank board"
+            #print "initial state none, making blank board"
             self.marks = [1,1,1,1,1,1,1,1,1]
         else:
-            print "given an initial state, using that as the board"
+            #print "given an initial state, using that as the board"
             self.marks = initial_state
         print self.marks
 
@@ -37,6 +37,8 @@ class Board:
         # -|---|---|---|-
         #  | 6 | 7 | 8 |
         # -|---|---|---|-
+        # translate() will, given a board position, return a character representing that position's
+        # status in a manner fit for human consumption.
         if self.marks[position] == 1:
             return " "
         elif self.marks[position] == 2:
@@ -47,8 +49,8 @@ class Board:
             return "?"
 
 
-boardtest = Board()
-boardtest2 = Board([1,2,3,1,1,1,1,3,2])
+#boardtest = Board()
+#boardtest2 = Board([1,2,3,1,1,1,1,3,2])
 
-print boardtest.print_format()
-print boardtest2.print_format()
+#print boardtest.print_format()
+#print boardtest2.print_format()
