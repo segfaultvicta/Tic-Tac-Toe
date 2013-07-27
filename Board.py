@@ -1,7 +1,7 @@
 import functools
 
-5O4X = 3888
-5X4O = 2592
+FIVE_O_FOUR_X = 3888
+FIVE_X_FOUR_O = 2592
 
 ROW_XOX = 18
 ROW_OXO = 12
@@ -82,7 +82,7 @@ class Board:
 
     def game_over(self):
         integer_state = self.integer_state()
-        if integer_state == 5O4X or integer_state == 5X4O:
+        if integer_state == FIVE_O_FOUR_X or integer_state == FIVE_X_FOUR_O:
             #game has to be either tied or won
             return True
         else:
