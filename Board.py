@@ -59,7 +59,8 @@ class Board:
     def translate(self,position, showPositions=False):
         """Given a board position, return a character representing that
         position's status in a manner fit for human consumption.
-        If showPositions is true, will return the current position rather than the mark at that position.
+        If showPositions is true, will return the current position rather than
+        the mark at that position if that position is currently empty.
         Positions are defined as follows:
         -|---|---|---|-
          | 0 | 1 | 2 |
@@ -69,10 +70,11 @@ class Board:
          | 6 | 7 | 8 |
         -|---|---|---|-
         """
-        if showPositions:
-            return str(position)
         if self.marks[position] == 1:
-            return " "
+            if showPositions:
+                return str(position)
+            else:
+                return " "
         elif self.marks[position] == 2:
             return "O"
         elif self.marks[position] == 3:

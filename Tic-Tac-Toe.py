@@ -2,35 +2,34 @@ from Board import *
 import copy
 
 def main_loop():
+
+    show_positions = [False] # using lists as lists are mutable
     print("Is it can be tic-tac-toe tiem nao plz?")
-
-    x_is_human = True
-
-    while 1:
-        go_first = input("Do you want to go first and play 'X'? [Y/N] ")
-        if go_first == "Y":
-            print("Okay. Playing as X.")
-            break
-        elif go_first == "N":
-            print("Okay. Playing as O.")
-            x_is_human = False
-            break
-        else:
-            print("Sorry, I didn't understand that input.")
-
-    game = Board()
 
     #while we still want to play again...
     while 1:
+        while 1:
+            x_is_human = True
+            go_first = input("Do you want to go first and play 'X'? [Y/N] ")
+            if go_first == "Y":
+                print("Okay. Playing as X.")
+                break
+            elif go_first == "N":
+                print("Okay. Playing as O.")
+                x_is_human = False
+                break
+            else:
+                print("Sorry, I didn't understand that input.")
+
+        game = Board()
         #while the game hasn't yet been won...
         turn = 1
         while 1:
             if x_is_human:
                 print("Turn " + str(turn) + ":")
-                print(game.format())
                 if not game.game_over():
                     #ask player for their move
-                    game.move(get_human_move(game),'X')
+                    game.move(get_human_move(game, show_positions),'X')
                     if not game.game_over():
                         #ask ai player for their move
                         game.move(get_ai_move(game, x_is_human),'O')
@@ -44,29 +43,46 @@ def main_loop():
                     game.move(get_ai_move(game, x_is_human),'X')
                     if not game.game_over():
                         print("Turn " + str(turn) + ":")
-                        print(game.format())
                         if not game.game_over():
-                            game.move(get_human_move(game),'O')
+                            game.move(get_human_move(game, show_positions),'O')
                         else:
                             break
                     else:
                         break
             turn += 1
         #game has been won at this point
-        print("Yaaay, game has won or drawn")
-        break
-    print("Exiting program.")
+        gameresult = evaluate(game)
+        if gameresult == -1:
+            print("Game result: win by O!")
+        elif gameresult == 0:
+            print("Game result: cat's game! >^.^< (Or tie, if you're boring.)")
+        else:
+            print("Game result: win by X!")
+        print(game)
+        while 1:
+            play_again = input("Play again? [Y/N]")
+            if play_again == "Y":
+                break
+            elif play_again == "N":
+                return
+            else:
+                print("I didn't understand that input.")
 
 #gets player input for a move. will loop until it recieves a legal position to move.
-def get_human_move(game):
-    """Gets player input for a move. 
+def get_human_move(game, show_positions):
+    """Prints game state and then gets player input for a move. 
     Will loop until it recieves a legal position to move.
+    If show_positions is true, will show positions rather than blank spaces.
     """
     while 1:
-        response = input("Please enter a position, 0 through 8, you wish to mark. Alternately, enter '?' to print out a reminder of all positions.")
+        print(game.format(show_positions[0]))
+        if show_positions[0]:
+            response = input("Please enter a position, 0 through 8, you wish to mark. Alternately, enter '?' to switch into a mode that displays blank spaces instead of position numbers.")
+        else:
+            response = input("Please enter a position, 0 through 8, you wish to mark. Alternately, enter '?' to switch into a mode that displays position numbers instead of blank spaces.")
         if response == "?":
-            print("The positions are as follows:")
-            print(game.format(True))
+            print("Switching position display modes!")
+            show_positions[0] = not show_positions[0]
         else:
             try:
                 int_response = int(response)
@@ -89,7 +105,6 @@ def evaluate(game):
     or 2*2*3 = 12.
     
     """
-    print(game.format())
     valid_row_exists = False
     for row in ALLROWS:
         if game.integer_state(row) != ROW_XOX and game.integer_state(row) != ROW_OXO:
@@ -98,10 +113,8 @@ def evaluate(game):
         #cat's game. meow meow meow
         return 0
     elif game.marks.count(3) > game.marks.count(2):
-        print("X wins")
         return 1
     else:
-        print("O wins")
         return -1
 
 def to_mark(player):
@@ -131,17 +144,7 @@ def generate_children(game, player):
             gamecopy.move(i,to_mark(player))
             children.append( (gamecopy, i) )
     return children
-  
-"""def minimax(maximising_player, game):
-    if game[0].game_over():
-        print("Found a terminal node after playing position " + str(game[1]))
-        return (evaluate(game[0]), game[1])
-    children = generate_children(game[0], maximising_player)
-    if maximising_player:
-        for child in children:
-"""            
-    
-  
+
 def alpha_beta(maximising_player, game, alpha, beta):
     """Returns the move that minimises the maximal loss to the board evaluation
     function, defined as 'the board is in a position such that X wins the game'.
@@ -156,12 +159,13 @@ def alpha_beta(maximising_player, game, alpha, beta):
     Since X is the maximising player, whenever maximising_player is true,
     alpha_beta is calculating a turn for X, and whenever it's false, alpha_beta
     is calculating a turn for O.
+    
+    game is actually a tuple consisting of the game state being considered,
+    and the position that was moved to in order to reach that state.
     """
     #check to see if the board is currently in a game over state (i.e. this is a terminal node)
-    print("alpha_beta, current player is " + to_mark(maximising_player))
-    #input("")
     if game[0].game_over():
-        return (evaluate(game[0]), game[1]) #return tuple containing last position moved
+        return (evaluate(game[0]), game[1]) #return tuple of score and last position moved
     #generate the set of all possible legal moves from this point.
     children = generate_children(game[0], maximising_player)
     #print(children)
@@ -230,3 +234,5 @@ def get_ai_move(game, x_is_human):
     
 
 main_loop() #start the game now that all functions have been defined :)
+print("A strange game. The only winning move is not to play.")
+print("...although playing against a tired programmer will do in a pinch.")
