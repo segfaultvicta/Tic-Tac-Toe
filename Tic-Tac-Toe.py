@@ -57,6 +57,9 @@ def main_loop():
 
 #gets player input for a move. will loop until it recieves a legal position to move.
 def get_human_move(game):
+    """Gets player input for a move. 
+    Will loop until it recieves a legal position to move.
+    """
     while 1:
         response = input("Please enter a position, 0 through 8, you wish to mark. Alternately, enter '?' to print out a reminder of all positions.")
         if response == "?":
