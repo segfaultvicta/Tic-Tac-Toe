@@ -104,14 +104,25 @@ def evaluate(game):
     The row product of all rows in a tied game will be either 3*3*2 = 18
     or 2*2*3 = 12.
     
+    I feel like there's something horribly clever I could have done here
+    involving number theory - probably involving assigning each square of the
+    board to a prime number? - but I didn't want to make things too complex
+    and by the time I thought of it it'd have required way too much backtracking.
+    
     """
     valid_row_exists = False
+    #check each row to see if it consists of two Xs and an O or vice versa.
+    #if there's a row that isn't like that, then it's not a tie!
     for row in ALLROWS:
         if game.integer_state(row) != ROW_XOX and game.integer_state(row) != ROW_OXO:
             valid_row_exists = True
     if not valid_row_exists:
         #cat's game. meow meow meow
         return 0
+    # evaluate will only be called in the event of a done game. Therefore, if
+    # the game is done, but it's not tied, one of the players has to have won:
+    # this will always be the player who has most recently moved, and thus
+    # will have more marks on the game board.
     elif game.marks.count(3) > game.marks.count(2):
         return 1
     else:
@@ -227,7 +238,18 @@ def get_ai_move(game, x_is_human):
     # If the centre square is clear, mark it.
     if game.is_legal_move(4):
         return 4
-    # Here's the fun part.
+    """Here's the fun part.
+    pass the inverse of x_is_human because alpha_beta takes
+    "is this the maximising player", i.e. X, as its input, and the first
+    call to alpha_beta is for the AI's turn. 
+    We start alpha_beta with an alpha value of -∞ and beta value of ∞,
+    meaning that the best the AI can do is lose, and the worst the opponent
+    can do is letting the AI win.
+    Game, alpha, and beta are given as tuples with the dummy value of -1 for
+    position played to get to this point - these tuples find use in the
+    alpha_beta function recursion to remember the position choice that led to 
+    a particular game tree path.
+    """    
     result = alpha_beta(not x_is_human, (game, -1), (float("-inf"), -1), (float("inf"), -1))
     return result[1]
     
