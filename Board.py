@@ -8,14 +8,14 @@ class Board:
     # This facilitates determining the state of any given row, column, 
     # or diagonal.
     def  __init__(self, initial_state=None):
-        #print "init board"
+        #print("init board")
         if initial_state is None:
-            #print "initial state none, making blank board"
+            #print("initial state none, making blank board")
             self.marks = [1,1,1,1,1,1,1,1,1]
         else:
-            #print "given an initial state, using that as the board"
+            #print("given an initial state, using that as the board")
             self.marks = initial_state
-        print self.marks
+        #print(self.marks)
 
     # Returns a string of the current board in a printable format.
     # If showPositions is true, it'll print out the number of each position,
@@ -53,9 +53,19 @@ class Board:
         else:
             return "?"
 
+    def game_over(self):
+        return False
+    
+    # assumes that position is a legal move. The check for that -should- be in this function,
+    # but I didn't want to spend forever on fiddly game loop UI things. I might refactor that later?
+    def move(self, position, mark):
+        if mark == 'X':
+            self.marks[position] = 3
+        else:
+            self.marks[position] = 2
 
 #boardtest = Board()
 #boardtest2 = Board([1,2,3,1,1,1,1,3,2])
 
-#print boardtest.print_format()
-#print boardtest2.print_format()
+#print(boardtest.print_format())
+#print(boardtest2.print_format())
