@@ -144,17 +144,17 @@ def alpha_beta(maximising_player, game, alpha, beta):
     """
     #check to see if the board is currently in a game over state (i.e. this is a terminal node)
     print("alpha_beta, current player is " + to_mark(maximising_player))
-    if game.game_over():
-        return evaluate(game)
+    if game[0].game_over():
+        return (evaluate(game[0]), game[1]) #return tuple containing last position moved
     #generate the set of all possible legal moves from this point.
-    children = generate_children(game, maximising_player)
-    print(children)
+    children = generate_children(game[0], maximising_player)
+    #print(children)
     if maximising_player:
         #player X is trying to minimise its maximal loss on the evaluation function
         #recursively call alpha_beta on all children of the current node
         for child in children:
             #recursively run alpha_beta to determine next best move after this child
-            best = alpha_beta(not maximising_player, child[0], alpha, beta)
+            best = alpha_beta(not maximising_player, child, alpha, beta)
             if best[0] > alpha[0]:
                 alpha = best #found a better best move to make
             if alpha[0] >= beta[0]:
@@ -163,7 +163,7 @@ def alpha_beta(maximising_player, game, alpha, beta):
     else:
         # player O is trying to maximise its minimal loss on the evaluation function
         for child in children:
-            best = alpha_beta(not maximising_player, child[0], alpha, beta)
+            best = alpha_beta(not maximising_player, child, alpha, beta)
             if best[0] < beta[0]:
                 beta = best #opponent has a better worst move
             if alpha[0] >= beta[0]:
@@ -209,8 +209,8 @@ def get_ai_move(game, x_is_human):
     if game.is_legal_move(4):
         return 4
     # Here's the fun part.
-    result = alpha_beta(not x_is_human, game, (float("-inf"), -1), (float("inf"), -1))
-    print(result)
+    result = alpha_beta(not x_is_human, (game, -1), (float("-inf"), -1), (float("inf"), -1))
+    return result[1]
     
 
 main_loop() #start the game now that all functions have been defined :)
