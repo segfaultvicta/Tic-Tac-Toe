@@ -77,7 +77,7 @@ def get_human_move(game):
             except ValueError:
                 print("I couldn't understand that input.")
   
-def get_ai_move(game, player_mark):
-    return get_human_move(game, player_mark) #FOR NOW. UNTIL WE DEVELOP A TIC TAC TOE AI THAT TAKES OVER THE WORLD
+def get_ai_move(game):
+    return get_human_move(game) #FOR NOW. UNTIL WE DEVELOP A TIC TAC TOE AI THAT TAKES OVER THE WORLD
 
 main_loop() #start the game now that all functions have been defined :)

@@ -64,6 +64,12 @@ class Board:
         else:
             self.marks[position] = 2
 
+    # will return true if the position is a legal move, and false otherwise.
+    # a legal move in Tic-Tac-Toe is any move that will not place a mark
+    # in a position already containing a mark.
+    def is_legal_move(self, position):
+        return self.marks[position] == 1
+    
 #boardtest = Board()
 #boardtest2 = Board([1,2,3,1,1,1,1,3,2])
 
