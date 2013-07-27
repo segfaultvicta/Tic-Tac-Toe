@@ -44,7 +44,7 @@ class Board:
         string += "-|---|---|---|-\n | "
         string += self.translate(6, showPositions) + " | " + self.translate(7, showPositions) + " | " + self.translate(8, showPositions) + " |\n"
         string += "-|---|---|---|-\n"
-        return stri
+        return string
         
     def __str__(self):
         return print_format(self)
