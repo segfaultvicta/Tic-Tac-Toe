@@ -80,12 +80,12 @@ class Board:
         if integer_state == 3888 or integer_state == 2592:
             return True
         else:
-            print("Iterating over all rows...")
+            #print("Iterating over all rows...")
             for row in ALLROWS:
                 #for every possible row, calculate its integer state and 
                 #compare that to the integer state of a row containing all
                 #'X' or all 'O', to determine if a player has won the game.
-                print("Row " + str(row));
+                #print("Row " + str(row));
                 if self.integer_state(row) == ROW_WON_X or self.integer_state(row) == ROW_WON_O:
                     return True
         return False
