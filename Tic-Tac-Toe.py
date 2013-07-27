@@ -159,7 +159,7 @@ def alpha_beta(maximising_player, game, alpha, beta):
     """
     #check to see if the board is currently in a game over state (i.e. this is a terminal node)
     print("alpha_beta, current player is " + to_mark(maximising_player))
-    input("")
+    #input("")
     if game[0].game_over():
         return (evaluate(game[0]), game[1]) #return tuple containing last position moved
     #generate the set of all possible legal moves from this point.

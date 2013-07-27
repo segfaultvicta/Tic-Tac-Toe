@@ -33,8 +33,8 @@ class Board:
     or diagonal.
     """
     def  __init__(self):
-       #self.marks = [1,1,1,1,1,1,1,1,1]
-       self.marks = [1,2,1,1,3,1,1,3,2]
+       self.marks = [1,1,1,1,1,1,1,1,1]
+       #self.marks = [1,2,1,1,3,1,1,3,2]
 
     def format(self, showPositions=False):
         """Returns a string of the current board in a printable format.
