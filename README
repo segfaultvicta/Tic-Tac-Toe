@@ -1,11 +1,12 @@
 Written against Python 3.3.2
 
-Intructions:
-1. Fork this repo on GitHub
-2. Create a program that can interactively play the game of Tic-Tac-Toe against a human player and never lose.
-3. Commit early and often, with good messages.
-4. Push your code back to GitHub and send us a pull request.
+Usage: python Tic-Tac-Toe.py and follow the instructions given onscreen.
+(Even if you follow the instructions, you still won't be able to win, though.)
 
-If you don't want to broadcast your intentions by forking this, feel free to clone it and work locally. Then, send us a tar.gz of your solution, including your .git folder so we can see your commit history.
+I used http://www.ocf.berkeley.edu/~yosenl/extras/alphabeta/alphabeta.html Mr. Yosen Lin's explanation
+of the minimax algorithm and alpha-beta pruning as the basis of my implementation of the alpha-beta
+algorithm, as well as wikipedia's pages for both the minimax and alpha-beta algorithms as mentioned
+in the code comments, and wikipedia's page on tic-tac-toe itself for basic heuristics.
 
-We are a Django shop, but it is not a requirement that you implement your program as a Django app.
+Thank you for your time and consideration, and for putting together the code challenge. I haven't had 
+that much fun hacking at something since I graduated college. :)
