@@ -1,7 +1,10 @@
 import functools
 
-CATSGAME1 = 3888
-CATSGAME2 = 2592
+5O4X = 3888
+5X4O = 2592
+
+ROW_XOX = 18
+ROW_OXO = 12
     
 ROW_WON_X = 27
 ROW_WON_O = 8
@@ -30,7 +33,8 @@ class Board:
     or diagonal.
     """
     def  __init__(self):
-        self.marks = [1,1,1,1,1,1,1,1,1]
+       #self.marks = [1,1,1,1,1,1,1,1,1]
+       self.marks = [1,2,1,1,3,1,1,3,2]
 
     def format(self, showPositions=False):
         """Returns a string of the current board in a printable format.
@@ -78,10 +82,10 @@ class Board:
 
     def game_over(self):
         integer_state = self.integer_state()
-        if integer_state == CATSGAME1 or integer_state == CATSGAME2:
+        if integer_state == 5O4X or integer_state == 5X4O:
+            #game has to be either tied or won
             return True
         else:
-            #print("Iterating over all rows...")
             for row in ALLROWS:
                 #for every possible row, calculate its integer state and 
                 #compare that to the integer state of a row containing all

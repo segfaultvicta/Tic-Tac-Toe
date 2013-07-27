@@ -51,6 +51,7 @@ def main_loop():
                             break
                     else:
                         break
+            turn += 1
         #game has been won at this point
         print("Yaaay, game has won or drawn")
         break
@@ -83,20 +84,24 @@ def get_human_move(game):
   
 def evaluate(game):
     """ Returns 1 for an X victory, 0 for a tie, and -1 for an O victory.
+    A cat's game (tie) will have all rows with 2 Xs and 1 O, or 1 X and 2 Os.
+    The row product of all rows in a tied game will be either 3*3*2 = 18
+    or 2*2*3 = 12.
     
-    in a game where X has won, there will be more '3's in the marks
-    list than '2's, since a 3 in a position in the marks list corresponds
-    to an 'X' on the game board. In a game where O has won, there will
-    be more '2's than '3's. There will never be the same number of Xs and
-    Os in a won game of tic-tac-toe, so this is sufficient for
-    determination of which player has won the game once a tie has been
-    ruled out by the initial if clause. """
-    if game.integer_state == CATSGAME1 or game.integer_state == CATSGAME2:
-        #a tied board evaluates to '0'
+    """
+    print(game.format())
+    valid_row_exists = False
+    for row in ALLROWS:
+        if game.integer_state(row) != ROW_XOX and game.integer_state(row) != ROW_OXO:
+            valid_row_exists = True
+    if not valid_row_exists:
+        #cat's game. meow meow meow
         return 0
     elif game.marks.count(3) > game.marks.count(2):
+        print("X wins")
         return 1
     else:
+        print("O wins")
         return -1
 
 def to_mark(player):
@@ -127,6 +132,16 @@ def generate_children(game, player):
             children.append( (gamecopy, i) )
     return children
   
+"""def minimax(maximising_player, game):
+    if game[0].game_over():
+        print("Found a terminal node after playing position " + str(game[1]))
+        return (evaluate(game[0]), game[1])
+    children = generate_children(game[0], maximising_player)
+    if maximising_player:
+        for child in children:
+"""            
+    
+  
 def alpha_beta(maximising_player, game, alpha, beta):
     """Returns the move that minimises the maximal loss to the board evaluation
     function, defined as 'the board is in a position such that X wins the game'.
@@ -144,6 +159,7 @@ def alpha_beta(maximising_player, game, alpha, beta):
     """
     #check to see if the board is currently in a game over state (i.e. this is a terminal node)
     print("alpha_beta, current player is " + to_mark(maximising_player))
+    input("")
     if game[0].game_over():
         return (evaluate(game[0]), game[1]) #return tuple containing last position moved
     #generate the set of all possible legal moves from this point.
