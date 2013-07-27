@@ -1,7 +1,7 @@
 import functools
 
-CATSGAME_1 = 3888
-CATSGAME_2 = 2592
+CATSGAME1 = 3888
+CATSGAME2 = 2592
     
 ROW_WON_X = 27
 ROW_WON_O = 8
@@ -20,22 +20,17 @@ DIAG2    = [2,4,6]
 ALLROWS  = [TOP, LEFT, RIGHT, BOTTOM, MIDROW, MIDCOL, DIAG1, DIAG2]
 
 class Board:
-    # 'marks' maintains a list of integers corresponding to the present board      
-    # state. It is initialised to a completely blank board by default.
-    # '1' corresponds to a blank spot on the board.
-    # '2' corresponds to an 'O' mark on the board.
-    # '3' corresponds to an 'X' mark on the board.
-    # This facilitates determining the state of any given row, column, 
-    # or diagonal.
-    def  __init__(self, initial_state=None):
-        #print("init board")
-        if initial_state is None:
-            #print("initial state none, making blank board")
-            self.marks = [1,1,1,1,1,1,1,1,1]
-        else:
-            #print("given an initial state, using that as the board")
-            self.marks = initial_state
-        #print(self.marks)
+    """
+    'marks' maintains a list of integers corresponding to the present board      
+    state. It is initialised to a completely blank board by default.
+    '1' corresponds to a blank spot on the board.
+    '2' corresponds to an 'O' mark on the board.
+    '3' corresponds to an 'X' mark on the board.
+    This facilitates determining the state of any given row, column, 
+    or diagonal.
+    """
+    def  __init__(self):
+        self.marks = [1,1,1,1,1,1,1,1,1]
 
     def print_format(self, showPositions=False):
         """Returns a string of the current board in a printable format.
@@ -77,7 +72,7 @@ class Board:
 
     def game_over(self):
         integer_state = self.integer_state()
-        if integer_state == 3888 or integer_state == 2592:
+        if integer_state == CATSGAME1 or integer_state == CATSGAME2:
             return True
         else:
             #print("Iterating over all rows...")

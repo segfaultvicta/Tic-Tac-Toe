@@ -1,5 +1,5 @@
 from Board import *
-import random
+import copy
 
 def main_loop():
     print("Is it can be tic-tac-toe tiem nao plz?")
@@ -81,6 +81,59 @@ def get_human_move(game):
             except ValueError:
                 print("I couldn't understand that input.")
   
+def evaluate(game):
+    """ Returns 1 for an X victory, 0 for a tie, and -1 for an O victory.
+    
+    in a game where X has won, there will be more '3's in the marks
+    list than '2's, since a 3 in a position in the marks list corresponds
+    to an 'X' on the game board. In a game where O has won, there will
+    be more '2's than '3's. There will never be the same number of Xs and
+    Os in a won game of tic-tac-toe, so this is sufficient for
+    determination of which player has won the game once a tie has been
+    ruled out by the initial if clause. """
+    if game.integer_state == CATSGAME1 or game.integer_state == CATSGAME2:
+        #a tied board evaluates to '0'
+        return 0
+    elif game.marks.count(3) > game.marks.count(2):
+        return 1
+    else
+        return -1
+
+def player_to_mark(playerX):
+    if playerX:
+        return "X"
+    else:
+        return "O"
+  
+def generate_children(game, playerX):
+    """Returns a list of games that could result from the given game and player turn."""
+    children = []
+    for i in range(0,9):
+        if game.is_legal_move(i):
+            # check to see if moving there would be a legal move;
+            # if it is, make a deep copy of the game board, perform that
+            # move on the board, and append it to the list of games.
+            children.append(copy.deepcopy(game).move(i,player_to_mark(playerX)))
+  
+def alpha_beta(playerX, game, alpha, beta):
+    """Returns the move that minimises the maximal loss to the board evaluation
+    function, defined as 'the board is in a position such that X wins the game'.
+    
+    With help from http://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
+    and also http://en.wikipedia.org/wiki/Minimax#Minimax_algorithm_with_alternate_moves
+    Aren't zero-sum games fun? :D
+    """
+    #check to see if the board is currently in a game over state (i.e. this is a terminal node)
+    if game.game_over():
+        return evaluate(game)
+    #generate the set of all possible legal moves from this point.
+    children = generate_children(game, playerX)
+    if playerX:
+        #player X is trying to minimise its maximal loss on the evaluation function
+        
+    else:
+        # player O is trying to maximise its minimal loss on the evaluation function
+  
 def get_ai_move(game, playerX):
     """Returns the AI's best position to mark given the state of the board.
     
@@ -120,11 +173,6 @@ def get_ai_move(game, playerX):
     if game.is_legal_move(4):
         return 4
     # Here's the fun part.
-    while 1:
-        #AAHAHAHAHA no this isn't really the AI.
-        #Maybe this is the AI when it was 4 years old, or something.
-        random_position = random.randint(0,8)
-        if game.is_legal_move(random_position):
-            return random_position
+    
 
 main_loop() #start the game now that all functions have been defined :)
