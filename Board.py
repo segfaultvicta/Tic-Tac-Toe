@@ -1,23 +1,25 @@
+import functools
+
+CATSGAME_1 = 3888
+CATSGAME_2 = 2592
+    
+ROW_WON_X = 27
+ROW_WON_O = 8
+ROW_NEARLY_WON_X = 9
+ROW_NEARLY_WON_O = 4
+    
+# All possible configurations that could contain a 3-in-a-row
+TOP      = [0,1,2]
+LEFT     = [0,3,6]
+RIGHT    = [2,5,8]
+BOTTOM   = [6,7,8]
+MIDROW   = [3,4,5]
+MIDCOL   = [1,4,7]
+DIAG1    = [0,4,8]
+DIAG2    = [2,4,6]
+ALLROWS  = [TOP, LEFT, RIGHT, BOTTOM, MIDROW, MIDCOL, DIAG1, DIAG2]
+
 class Board:
-  
-    CATSGAME_1 = 3888
-    CATSGAME_2 = 2592
-    
-    ROW_WON_X = 27
-    ROW_WON_O = 8
-    ROW_NEARLY_WON_X = 9
-    ROW_NEARLY_WON_O = 4
-    
-    # All possible configurations that could contain a 3-in-a-row
-    TOP      = [0,1,2]
-    LEFT     = [0,3,6]
-    RIGHT    = [2,5,8]
-    BOTTOM   = [6,7,8]
-    MIDROW   = [3,4,5]
-    MIDCOL   = [1,4,7]
-    DIAG1    = [0,4,8]
-    DIAG2    = [2,4,6]
-    ALLROWS  = [TOP, LEFT, RIGHT, BOTTOM, MIDROW, MIDCOL, DIAG1, DIAG2]
     # 'marks' maintains a list of integers corresponding to the present board      
     # state. It is initialised to a completely blank board by default.
     # '1' corresponds to a blank spot on the board.
@@ -78,7 +80,13 @@ class Board:
         if integer_state == 3888 or integer_state == 2592:
             return True
         else:
-            
+            for row in ALLROWS:
+                #for every possible row, calculate its integer state and 
+                #compare that to the integer state of a row containing all
+                #'X' or all 'O', to determine if a player has won the game.
+                if self.integer_state(row) == ROW_WON_X or self.integer_state(row) == ROW_WON_O:
+                    return True
+        return False
     
     def move(self, position, mark):
         """Marks a given position with a given mark. 
@@ -114,7 +122,7 @@ class Board:
         for position in range(0,9):
             if position in mask:
                 masked_marks.append(self.marks[position])
-        return reduce(lambda x, y: x*y, self.marks)
+        return functools.reduce(lambda x, y: x*y, self.marks)
 
 #boardtest = Board()
 #boardtest2 = Board([1,2,3,1,1,1,1,3,2])
