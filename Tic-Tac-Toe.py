@@ -168,7 +168,6 @@ def alpha_beta(maximising_player, game, alpha, beta):
         return (evaluate(game[0]), game[1]) #return tuple of score and last position moved
     #generate the set of all possible legal moves from this point.
     children = generate_children(game[0], maximising_player)
-    #print(children)
     if maximising_player:
         #player X is trying to minimise its maximal loss on the evaluation function
         #recursively call alpha_beta on all children of the current node
@@ -200,8 +199,8 @@ def get_ai_move(game, x_is_human):
     both can't be blocked with a single move, the AI's screwed anyway.
     However, that shouldn't ever even be the case.)
     3. If the centre square is clear, mark it.
-    4. Recursively search the game tree using alpha-beta pruning to determine
-    the best move to take.
+    4. Recursively search the game tree using minimax algorithm with
+    alpha-beta pruning to determine the best move to take.
     """
     if x_is_human:
         #AI is playing player O
