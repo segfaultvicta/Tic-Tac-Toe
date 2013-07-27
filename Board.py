@@ -32,7 +32,7 @@ class Board:
     def  __init__(self):
         self.marks = [1,1,1,1,1,1,1,1,1]
 
-    def print_format(self, showPositions=False):
+    def format(self, showPositions=False):
         """Returns a string of the current board in a printable format.
         If showPositions is true, it'll print out the number of each position,
         rather than the mark at each position.
@@ -47,7 +47,10 @@ class Board:
         return string
         
     def __str__(self):
-        return print_format(self)
+        return self.format()
+        
+    def __repr__(self):
+        return self.format()
         
     def translate(self,position, showPositions=False):
         """Given a board position, return a character representing that

@@ -4,7 +4,7 @@ import copy
 def main_loop():
     print("Is it can be tic-tac-toe tiem nao plz?")
 
-    playerX = True
+    x_is_human = True
 
     while 1:
         go_first = input("Do you want to go first and play 'X'? [Y/N] ")
@@ -13,7 +13,7 @@ def main_loop():
             break
         elif go_first == "N":
             print("Okay. Playing as O.")
-            playerX = False
+            x_is_human = False
             break
         else:
             print("Sorry, I didn't understand that input.")
@@ -25,15 +25,15 @@ def main_loop():
         #while the game hasn't yet been won...
         turn = 1
         while 1:
-            if playerX:
+            if x_is_human:
                 print("Turn " + str(turn) + ":")
-                print(game.print_format())
+                print(game.format())
                 if not game.game_over():
                     #ask player for their move
                     game.move(get_human_move(game),'X')
                     if not game.game_over():
                         #ask ai player for their move
-                        game.move(get_ai_move(game, playerX),'O')
+                        game.move(get_ai_move(game, x_is_human),'O')
                     else:
                         break #game has been won
                 else:
@@ -41,10 +41,10 @@ def main_loop():
             else:
                 #playing as 'O', so the AI goes first...
                 if not game.game_over():
-                    game.move(get_ai_move(game, playerX),'X')
+                    game.move(get_ai_move(game, x_is_human),'X')
                     if not game.game_over():
                         print("Turn " + str(turn) + ":")
-                        print(game.print_format())
+                        print(game.format())
                         if not game.game_over():
                             game.move(get_human_move(game),'O')
                         else:
@@ -65,7 +65,7 @@ def get_human_move(game):
         response = input("Please enter a position, 0 through 8, you wish to mark. Alternately, enter '?' to print out a reminder of all positions.")
         if response == "?":
             print("The positions are as follows:")
-            print(game.print_format(True))
+            print(game.format(True))
         else:
             try:
                 int_response = int(response)
@@ -96,45 +96,81 @@ def evaluate(game):
         return 0
     elif game.marks.count(3) > game.marks.count(2):
         return 1
-    else
+    else:
         return -1
 
-def player_to_mark(playerX):
-    if playerX:
+def to_mark(player):
+    """Returns a mark corresponding to the current player.
+    
+    If the current player is the maximising player, it will return 'X'.
+    Otherwise - the current player is the minimising player, and it returns 'O'.
+    """
+    if player:
         return "X"
     else:
         return "O"
   
-def generate_children(game, playerX):
-    """Returns a list of games that could result from the given game and player turn."""
+def generate_children(game, player):
+    """Returns a list of games that could result from the given game and player turn.
+    player = true means that the current ply is one of X's turns,
+    player = false means that the current ply is one of O's turns.
+    """
     children = []
     for i in range(0,9):
         if game.is_legal_move(i):
             # check to see if moving there would be a legal move;
             # if it is, make a deep copy of the game board, perform that
-            # move on the board, and append it to the list of games.
-            children.append(copy.deepcopy(game).move(i,player_to_mark(playerX)))
+            # move on the board, and append a tuple containing it and
+            # the position chosen to the list of games.
+            gamecopy = copy.deepcopy(game)
+            gamecopy.move(i,to_mark(player))
+            children.append( (gamecopy, i) )
+    return children
   
-def alpha_beta(playerX, game, alpha, beta):
+def alpha_beta(maximising_player, game, alpha, beta):
     """Returns the move that minimises the maximal loss to the board evaluation
     function, defined as 'the board is in a position such that X wins the game'.
     
     With help from http://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
     and also http://en.wikipedia.org/wiki/Minimax#Minimax_algorithm_with_alternate_moves
     Aren't zero-sum games fun? :D
+    
+    maximising_player will be true if, on the first pass, the AI is playing 'X',
+    and then on further passes, if the AI is calculating the best position for 'O'.
+    
+    Since X is the maximising player, whenever maximising_player is true,
+    alpha_beta is calculating a turn for X, and whenever it's false, alpha_beta
+    is calculating a turn for O.
     """
     #check to see if the board is currently in a game over state (i.e. this is a terminal node)
+    print("alpha_beta, current player is " + to_mark(maximising_player))
     if game.game_over():
         return evaluate(game)
     #generate the set of all possible legal moves from this point.
-    children = generate_children(game, playerX)
-    if playerX:
+    children = generate_children(game, maximising_player)
+    print(children)
+    if maximising_player:
         #player X is trying to minimise its maximal loss on the evaluation function
-        
+        #recursively call alpha_beta on all children of the current node
+        for child in children:
+            #recursively run alpha_beta to determine next best move after this child
+            best = alpha_beta(not maximising_player, child[0], alpha, beta)
+            if best[0] > alpha[0]:
+                alpha = best #found a better best move to make
+            if alpha[0] >= beta[0]:
+                return alpha #cut off this branch
+        return alpha #move that minimises maximal loss of evaluation function
     else:
         # player O is trying to maximise its minimal loss on the evaluation function
+        for child in children:
+            best = alpha_beta(not maximising_player, child[0], alpha, beta)
+            if best[0] < beta[0]:
+                beta = best #opponent has a better worst move
+            if alpha[0] >= beta[0]:
+                return beta #cut off this branch
+        return beta #minimiser's best move at this juncture
   
-def get_ai_move(game, playerX):
+def get_ai_move(game, x_is_human):
     """Returns the AI's best position to mark given the state of the board.
     
     General heuristic steps:
@@ -147,7 +183,7 @@ def get_ai_move(game, playerX):
     4. Recursively search the game tree using alpha-beta pruning to determine
     the best move to take.
     """
-    if playerX:
+    if x_is_human:
         #AI is playing player O
         row_near_victory = ROW_NEARLY_WON_O
         row_near_loss = ROW_NEARLY_WON_X
@@ -173,6 +209,8 @@ def get_ai_move(game, playerX):
     if game.is_legal_move(4):
         return 4
     # Here's the fun part.
+    result = alpha_beta(not x_is_human, game, (float("-inf"), -1), (float("inf"), -1))
+    print(result)
     
 
 main_loop() #start the game now that all functions have been defined :)
