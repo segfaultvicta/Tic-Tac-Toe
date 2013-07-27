@@ -32,7 +32,7 @@ def main_loop():
                     game.move(get_human_move(game),'X')
                     if not game.game_over():
                         #ask ai player for their move
-                        game.move(get_ai_move(game),'O')
+                        game.move(get_ai_move(game, playerX),'O')
                     else:
                         break #game has been won
                 else:
@@ -40,7 +40,7 @@ def main_loop():
             else:
                 #playing as 'O', so the AI goes first...
                 if not game.game_over():
-                    game.move(get_ai_move(game),'X')
+                    game.move(get_ai_move(game, playerX),'X')
                     if not game.game_over():
                         print("Turn " + str(turn) + ":")
                         print(game.print_format())
@@ -80,7 +80,50 @@ def get_human_move(game):
             except ValueError:
                 print("I couldn't understand that input.")
   
-def get_ai_move(game):
-    return get_human_move(game) #FOR NOW. UNTIL WE DEVELOP A TIC TAC TOE AI THAT TAKES OVER THE WORLD
+def get_ai_move(game, playerX):
+    """Returns the AI's best position to mark given the state of the board.
+    
+    General heuristic steps:
+    1. If there's a 2-in-a-row of the AI's, it should complete it.
+    2. If there's a 2-in-a-row of the human player's, it should block it. 
+    (Order doesn't matter, since if there's more than one human 2-in-a-row and
+    both can't be blocked with a single move, the AI's screwed anyway.
+    However, that shouldn't ever even be the case.)
+    3. If the centre square is clear, mark it.
+    4. Recursively search the game tree using alpha-beta pruning to determine
+    the best move to take.
+    """
+    if playerX:
+        #AI is playing player O
+        row_near_victory = ROW_NEARLY_WON_O
+        row_near_loss = ROW_NEARLY_WON_X
+    else:
+        #AI is playing player X
+        row_near_victory = ROW_NEARLY_WON_X
+        row_near_loss = ROW_NEARLY_WON_O
+    # If there's a 2-in-a-row of the AI's, it should complete it.
+    for row in ALLROWS:
+        if board.integer_state(row) == row_near_victory:
+            #complete the row
+            for position in row:
+                if board.is_legal_move(position):
+                    return position
+    # If there's a 2-in-a-row of the human player's, it should block it.               
+    for row in ALLROWS:
+        if board.integer_state(row) == row_near_loss:
+            #complete the row to prevent the opponent from winning
+            for position in row:
+                if board.is_legal_move(position):
+                    return position
+    # If the centre square is clear, mark it.
+    if board.is_legal_move(4):
+        return 4
+    # Here's the fun part.
+    while 1:
+        #AAHAHAHAHA no this isn't really the AI.
+        #Maybe this is the AI when it was 4 years old, or something.
+        random_position = random.randint(0,8)
+        if board.is_legal_move(random_position):
+            return random_position
 
 main_loop() #start the game now that all functions have been defined :)
