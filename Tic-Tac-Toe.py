@@ -1,4 +1,5 @@
-from Board import Board
+from Board import *
+import random
 
 def main_loop():
     print("Is it can be tic-tac-toe tiem nao plz?")
@@ -103,27 +104,27 @@ def get_ai_move(game, playerX):
         row_near_loss = ROW_NEARLY_WON_O
     # If there's a 2-in-a-row of the AI's, it should complete it.
     for row in ALLROWS:
-        if board.integer_state(row) == row_near_victory:
+        if game.integer_state(row) == row_near_victory:
             #complete the row
             for position in row:
-                if board.is_legal_move(position):
+                if game.is_legal_move(position):
                     return position
     # If there's a 2-in-a-row of the human player's, it should block it.               
     for row in ALLROWS:
-        if board.integer_state(row) == row_near_loss:
+        if game.integer_state(row) == row_near_loss:
             #complete the row to prevent the opponent from winning
             for position in row:
-                if board.is_legal_move(position):
+                if game.is_legal_move(position):
                     return position
     # If the centre square is clear, mark it.
-    if board.is_legal_move(4):
+    if game.is_legal_move(4):
         return 4
     # Here's the fun part.
     while 1:
         #AAHAHAHAHA no this isn't really the AI.
         #Maybe this is the AI when it was 4 years old, or something.
         random_position = random.randint(0,8)
-        if board.is_legal_move(random_position):
+        if game.is_legal_move(random_position):
             return random_position
 
 main_loop() #start the game now that all functions have been defined :)
